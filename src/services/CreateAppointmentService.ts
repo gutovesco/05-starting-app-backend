@@ -1,8 +1,8 @@
 import Appointment from '../models/Appointment'
 import {startOfHour} from 'date-fns'
 import {getCustomRepository} from 'typeorm'
-import AppointmentsRepository from '../Appointments/AppointmentsRepository'
 import ApointmentsRepository from '../Appointments/AppointmentsRepository'
+import AppError from '../errors/AppError'
 
 interface Request {
   provider_id: string;
@@ -23,7 +23,7 @@ class CreateAppointmentService {
 
   //se a data do novo agendamento já existe, retorna um erro falando que já tem um agendamento
   if(findAppointmentInSameDate){
-    throw Error('Appointment already booked')
+    throw new AppError('Appointment already booked')
   }
 
   //método que cria um novo agendamento
