@@ -1,17 +1,17 @@
 import Appointment from '../models/Appointment'
 import {startOfHour} from 'date-fns'
 import {getCustomRepository} from 'typeorm'
-import AppointmentsRepository from '../Appointments/AppointmentsRepository'
 import ApointmentsRepository from '../Appointments/AppointmentsRepository'
+import AppError from '../errors/AppError'
 
 interface Request {
-  provider: string;
+  provider_id: string;
   date: Date;
 }
 
 class CreateAppointmentService {
   //método que executa as regras de negócio
-  public async execute({provider, date}: Request): Promise<Appointment>{
+  public async execute({provider_id, date}: Request): Promise<Appointment>{
 
     const appointmentsRepository = getCustomRepository(ApointmentsRepository)
 
@@ -23,12 +23,12 @@ class CreateAppointmentService {
 
   //se a data do novo agendamento já existe, retorna um erro falando que já tem um agendamento
   if(findAppointmentInSameDate){
-    throw Error('Appointment already booked')
+    throw new AppError('Appointment already booked')
   }
 
   //método que cria um novo agendamento
   const appointment = appointmentsRepository.create({
-    provider,
+    provider_id,
     date: appointmentDate
   })
 
