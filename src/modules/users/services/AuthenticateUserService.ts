@@ -1,8 +1,8 @@
-import User from '../models/User'
+import User from '../entities/User'
 import {getRepository} from 'typeorm'
 import {compare} from 'bcryptjs'
 import {sign} from 'jsonwebtoken'
-import AppError from '../errors/AppError'
+import AppError from '../../../shared/errors/AppError'
 
 interface Request{
   email: string,
