@@ -4,7 +4,8 @@ import ensureAuthenticated from '../middlewares/ensureAuthenticated'
 import multer from 'multer'
 import uploadConfig from '@config/upload'
 import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService'
-import UsersRepositories from '@modules/users/infra/typeorm/repositories/UsersRepositories'
+import {container} from 'tsyringe'
+
 
 const usersRouter = Router()
 const upload = multer(uploadConfig)
@@ -15,8 +16,7 @@ usersRouter.post('/', async (request, response) => {
   try{
     const {name, email, password} = request.body
 
-    const usersRepository = new UsersRepositories()
-    const createUser = new CreateUserService(usersRepository)
+    const createUser = container.resolve(CreateUserService)
 
     const user = await createUser.execute({
       name,
@@ -37,8 +37,8 @@ usersRouter.patch('/avatar', ensureAuthenticated, upload.single('avatar'), async
   //mostra todas as informações do arquivo
   console.log(request.file);
 
-    const usersRepository = new UsersRepositories()
-    const updateUserAvatar = new UpdateUserAvatarService(usersRepository)
+
+    const updateUserAvatar = container.resolve(UpdateUserAvatarService)
 
     const user = await updateUserAvatar.execute({
       user_id: request.user.id,

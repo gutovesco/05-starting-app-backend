@@ -5,15 +5,19 @@ import uploadConfig from '@config/upload'
 import fs from 'fs'
 import AppError from '@shared/errors/AppError'
 import IUsersRepository from '../repositories/IUsersRepository'
-
+import {injectable, inject} from 'tsyringe'
 
 interface Request{
   user_id: string,
   avatarFilename: string
 }
 
+@injectable()
 class UpdateUserAvatarService{
-  constructor(private usersRepository: IUsersRepository){}
+  constructor(
+  @inject('UsersRepository')
+  private usersRepository: IUsersRepository
+  ){}
   public async execute({user_id, avatarFilename}: Request): Promise<User>{
     // pega os repositórios
 

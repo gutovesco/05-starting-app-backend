@@ -3,15 +3,20 @@ import {compare} from 'bcryptjs'
 import {sign} from 'jsonwebtoken'
 import AppError from '@shared/errors/AppError'
 import IUsersRepository from '../repositories/IUsersRepository'
-
+import {injectable, inject} from 'tsyringe'
 
 interface Request{
   email: string,
   password: string
 }
 
+@injectable()
 export default class AuthenticateUserService{
-  constructor(private usersRepository: IUsersRepository){}
+  constructor(
+  @inject('UsersRepository')
+  private usersRepository: IUsersRepository
+  ){}
+
   public async execute({ email, password}: Request): Promise<{user: User, token: string}>{
 
     const user = await this.usersRepository.findByEmail(email)
